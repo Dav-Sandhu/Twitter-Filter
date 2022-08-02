@@ -5,9 +5,7 @@ const createFileSync = (TEXT) => {
 }
 
 const clearFile = () => {
-	writeFileSync("file.html", 
-	"<meta charset='utf-8'>" + 
-	"<head><link rel='stylesheet' href='/tweet_styles.css'></head>")
+	writeFileSync("file.html","")
 }
 
 export {createFileSync, readFileSync, clearFile};
