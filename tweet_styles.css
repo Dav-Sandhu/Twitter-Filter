@@ -1,0 +1,16 @@
+p {
+    border: 1px solid black; 
+    background-color: coral; 
+    overflow:auto;
+    margin: auto;
+}
+
+h3 {
+    display: flex;
+    align-items: center;
+}
+
+img {
+    border-radius: 50%;
+    border: 1px solid black;
+}
