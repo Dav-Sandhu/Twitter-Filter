@@ -7,6 +7,8 @@ import {createFileSync, readFileSync, clearFile} from './fileHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const header = path.join(__dirname, "index.html")
+const body = path.join(__dirname, "file.html")
 
 //create a file called 'users.json' and add two arrays for normal users and special users
 const users = JSON.parse(readFileSync(path.join(__dirname, "users.json"), "utf8"))
@@ -68,8 +70,7 @@ http.createServer((req, res) => {
 		res.writeHead(200, {
 			'Content-Type': 'text/html'
 		})
-
-		res.end(readFileSync(path.join(__dirname, "file.html")))
+		res.end(readFileSync(header) + readFileSync(body))
 	}else if (req.url === '/tweet_styles.css'){
 		res.writeHead(200, {
 			'Content-Type': 'text/css'
