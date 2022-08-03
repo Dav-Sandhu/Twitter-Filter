@@ -2,13 +2,15 @@ import http from 'http'
 import twit from 'twit'
 import path from 'path'
 
+import {JSDOM} from 'jsdom'
 import {fileURLToPath} from 'url'
 import {createFileSync, readFileSync, clearFile} from './fileHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const header = path.join(__dirname, "index.html")
-const body = path.join(__dirname, "file.html")
+
+const doc = new JSDOM(readFileSync(path.join(__dirname, "index.html"), "utf8")).window.document
+const element = new JSDOM(readFileSync(path.join(__dirname, "tweet.html"), "utf8")).window.document
 
 //create a file called 'users.json' and add two arrays for normal users and special users
 const users = JSON.parse(readFileSync(path.join(__dirname, "users.json"), "utf8"))
@@ -24,26 +26,29 @@ const T = new twit({
 })
 
 const display_tweets = (tweets) => {
-	createFileSync("<div class='border'><div class='tweet'><h3 class='profile'> <img src='")
-	createFileSync(tweets.user.profile_image_url)
-	createFileSync("' class='profile_picture' />&nbsp" + tweets.user.name + '</h3>')
-	createFileSync("<a>" + tweets.text + '</a><br>')
-
+	element.getElementById("profile_picture").src = tweets.user.profile_image_url.toString()
+	element.getElementById("username").innerHTML = tweets.user.name.toString()
+	element.getElementById("content").innerHTML = tweets.text.toString()
 	if (tweets.entities['media'] !== undefined){
+		let image_tag = ""
 		tweets.extended_entities.media.map(p => {
-			createFileSync("<img src='" + p.media_url_https)
-			createFileSync("' class='images' width=200 height=200 />&nbsp")
+			image_tag += "<img src='"
+			image_tag += p.media_url_https.toString()
+			image_tag += "' class='images' width=200 height=200 />&nbsp"
 		})
-		createFileSync("<br>")
-	}
-	let date = tweets.created_at.substring(0, tweets.created_at.indexOf('+'))
-	createFileSync("<div class='date'>" + date + "</div><br></div></div>")
+
+		image_tag += "<br>"
+		element.getElementById("img").innerHTML = image_tag
+	}else{element.getElementById("img").innerHTML = ""}
+
+	let date_posted = tweets.created_at.substring(0, tweets.created_at.indexOf('+'))
+	element.getElementById("date_posted").innerHTML = date_posted
 }
 
 const get_tweets = (USER, SPECIAL) => {
 	T.get('statuses/user_timeline', { 
 		screen_name: USER, 
-		count: 5, 
+		count: 1, 
 		include_rts: false,
 		exclude_replies: SPECIAL,
 		trim_user: false
@@ -51,6 +56,7 @@ const get_tweets = (USER, SPECIAL) => {
 		if (err) {console.log(err)}
 		else{
 			data.forEach(display_tweets)
+			doc.getElementById("root").innerHTML += element.documentElement.innerHTML
 		}
 	})
 }
@@ -65,8 +71,6 @@ const high_priority = (ACCOUNT) => {
 	get_tweets(ACCOUNT, false)
 }
 
-clearFile()
-
 users.normal.forEach(low_priority)
 users.special.forEach(high_priority)
 
@@ -75,7 +79,7 @@ http.createServer((req, res) => {
 		res.writeHead(200, {
 			'Content-Type': 'text/html'
 		})
-		res.end(readFileSync(header) + readFileSync(body))
+		res.end(doc.documentElement.innerHTML)
 	}else if (req.url === '/tweet_styles.css'){
 		res.writeHead(200, {
 			'Content-Type': 'text/css'
