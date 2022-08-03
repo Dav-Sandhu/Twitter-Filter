@@ -24,17 +24,20 @@ const T = new twit({
 })
 
 const display_tweets = (tweets) => {
-	createFileSync("<p><h3> <img src='" + tweets.user.profile_image_url + "'/>&nbsp" + tweets.user.name + '</h3>')
+	createFileSync("<div class='border'><div class='tweet'><h3 class='profile'> <img src='")
+	createFileSync(tweets.user.profile_image_url)
+	createFileSync("' class='profile_picture' />&nbsp" + tweets.user.name + '</h3>')
 	createFileSync("<a>" + tweets.text + '</a><br>')
+
 	if (tweets.entities['media'] !== undefined){
 		tweets.extended_entities.media.map(p => {
 			createFileSync("<img src='" + p.media_url_https)
-			createFileSync("' style='border-radius: 0%' width=200 height=200 />&nbsp")
+			createFileSync("' class='images' width=200 height=200 />&nbsp")
 		})
 		createFileSync("<br>")
 	}
 	let date = tweets.created_at.substring(0, tweets.created_at.indexOf('+'))
-	createFileSync("<div id='date'>" + date + "</div><br></p>")
+	createFileSync("<div class='date'>" + date + "</div><br></div></div>")
 }
 
 const get_tweets = (USER, SPECIAL) => {
@@ -46,7 +49,9 @@ const get_tweets = (USER, SPECIAL) => {
 		trim_user: false
 	}, (err, data) => {
 		if (err) {console.log(err)}
-		else{data.forEach(display_tweets)}
+		else{
+			data.forEach(display_tweets)
+		}
 	})
 }
 
