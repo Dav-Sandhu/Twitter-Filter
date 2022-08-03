@@ -4,7 +4,7 @@ import path from 'path'
 
 import {JSDOM} from 'jsdom'
 import {fileURLToPath} from 'url'
-import {createFileSync, readFileSync, clearFile} from './fileHandler.js'
+import {readFileSync} from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
