@@ -1,7 +1,6 @@
 import http from 'http'
 import twit from 'twit'
 import path from 'path'
-
 import {JSDOM} from 'jsdom'
 import {fileURLToPath} from 'url'
 import {readFileSync} from 'fs'
@@ -9,6 +8,10 @@ import {readFileSync} from 'fs'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+/*
+creates two jsdom objects, the 'doc' for where the main HTML code goes and the 'element' for where 
+the HTML code for the tweets goes.
+*/
 const doc = new JSDOM(readFileSync(path.join(__dirname, "index.html"), "utf8")).window.document
 const element = new JSDOM(readFileSync(path.join(__dirname, "tweet.html"), "utf8")).window.document
 
@@ -25,6 +28,7 @@ const T = new twit({
 	access_token_secret:  cred.access_token_secret
 })
 
+//outputs the tweets to the element object
 const display_tweets = (tweets) => {
 	element.getElementById("profile_picture").src = tweets.user.profile_image_url.toString()
 	element.getElementById("username").innerHTML = tweets.user.name.toString()
@@ -45,6 +49,7 @@ const display_tweets = (tweets) => {
 	element.getElementById("date_posted").innerHTML = date_posted
 }
 
+//utilizes the 'twit' library to obtain tweets and adds them to the root doc 
 const get_tweets = (USER, SPECIAL) => {
 	T.get('statuses/user_timeline', { 
 		screen_name: USER, 
@@ -71,9 +76,11 @@ const high_priority = (ACCOUNT) => {
 	get_tweets(ACCOUNT, false)
 }
 
+//iterates through all of the users to obtain their tweets
 users.normal.forEach(low_priority)
 users.special.forEach(high_priority)
 
+//runs a server where all of the obtained information is displayed
 http.createServer((req, res) => {
 	if (req.url === '/'){
 		res.writeHead(200, {
