@@ -33,8 +33,8 @@ const display_tweets = (tweets) => {
 		})
 		createFileSync("<br>")
 	}
-
-	createFileSync("<br></p>")
+	let date = tweets.created_at.substring(0, tweets.created_at.indexOf('+'))
+	createFileSync("<div id='date'>" + date + "</div><br></p>")
 }
 
 const get_tweets = (USER, SPECIAL) => {
