@@ -1,7 +1,7 @@
 # Twitter-Filter
 For filtering twitter accounts for tweets only, simplified version of twitter.
 To use: 
-  1) run "npm install" to get all dependencies
+  1) run "npm install" in both the client and server folders to get all dependencies
   2) create a public folder in server
   3) Add 2 files to the folder "credentials.json" and "users.json"
   4) In the "credentials.json" file add: consumer_key, consumer_secret, access_token, access_token_secret.
