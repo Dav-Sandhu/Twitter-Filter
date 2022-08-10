@@ -22,7 +22,6 @@ const Tweets = () => {
                                 t.img_flag === "true" ? t.images.map(i => {
                                     return <img className="images" src={i} alt=""/>
                                 }) : <></>
-                                
                             }
                             <div className="date_posted">{t.date_posted}</div><br />
                         </div>
