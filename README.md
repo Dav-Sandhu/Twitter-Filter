@@ -17,4 +17,4 @@ To use:
  ```
   7) Run the server using the "npm start" in the "server" folder.
   8) Run the client using the same command in the "client" folder, which will then take you to the website.
-  ![alt text](https://imgur.com/3dDsee1)
+  ![alt text](https://i.imgur.com/3dDsee1.png)
