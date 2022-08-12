@@ -14,5 +14,5 @@ To use:
   "access_token_secret":  "your_access_token_secret"
   }
  ```
-  6) In the "users.json" file add two arrays, one called "special" and one called "normal" for special and normal users. special users show more information about each     user whereas normal users show normal amount of information.
-  7) First run the server which should appear on port: 8000, then run the client which should appear on port: 3000
+  6) Run the server using the "npm start" in the "server" folder.
+  7) Run the client using the same command in the "client" folder, which will then take you to the website.
