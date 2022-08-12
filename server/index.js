@@ -3,7 +3,8 @@ import path from 'path'
 import express from 'express'
 import cors from 'cors'
 import {fileURLToPath} from 'url'
-import {readFileSync} from 'fs'
+import {readFileSync, writeFileSync} from 'fs'
+import {addUser, removeUser} from './user.js'
 
 const app = express()
 
@@ -12,11 +13,23 @@ let tweets = []
 //for each users tweets as json objects in an array
 let temp = []
 
+//to check for duplicates
+let usernames  = []
+
+//unique id for each tweet
+let tweet_id = 0
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-//create a file called 'users.json' and add two arrays for normal users and special users
-const users = JSON.parse(readFileSync(path.join(__dirname, "public/users.json"), "utf8"))
+let users = {users: []}
+
+try{
+	//create a file called 'users.json' and add two arrays for normal users and special users
+	users = JSON.parse(readFileSync(path.join(__dirname, "public/users.json"), "utf8"))
+}catch(err){
+	writeFileSync(path.join(__dirname, "public/users.json"), JSON.stringify(users))
+}
 
 //create a file called 'credentials.json' and add all of your corresponding credentials
 const cred = JSON.parse(readFileSync(path.join(__dirname, "public/credentials.json"), "utf8"))
@@ -34,7 +47,9 @@ const display_tweets = (t) => {
 	let tweet = {
 		profile_picture: t.user.profile_image_url.toString(),
 		username: t.user.name.toString(),
-		text: t.text.toString(),
+		screen_name: t.user.screen_name,
+		text: t.full_text.toString(),
+		tweet_id: tweet_id,
 		date_posted: t.created_at.substring(0, t.created_at.indexOf('+'))
 	}
 
@@ -49,50 +64,64 @@ const display_tweets = (t) => {
 	}
 
 	temp.push(tweet)
+	tweet_id++
 }
 
 //utilizes the 'twit' library to obtain tweets and adds them to the root doc 
-const get_tweets = (USER, SPECIAL) => {
- 	T.get('statuses/user_timeline', { 
+const get_tweets = async (USER, UPDATE) => {
+ 	await T.get('statuses/user_timeline', { 
  		screen_name: USER, 
- 		count: 1, 
+ 		count: 10, 
  		include_rts: false,
- 		exclude_replies: SPECIAL,
- 		trim_user: false
+ 		exclude_replies: true,
+ 		trim_user: false,
+		tweet_mode: "extended"
  	}, (err, data) => {
- 		if (err) {console.log(err)}
- 		else{
- 			data.forEach(display_tweets)
-			tweets.push(temp)
-			temp = []
+ 		if (err) {
+			console.log(err)
+		}else if (data[0] !== undefined){
+			if (usernames.indexOf(USER) === -1){
+				data.forEach(display_tweets)
+				tweets.push(temp)
+				usernames.push(USER)
+				temp = []
+			
+				if (UPDATE){addUser(USER.toLowerCase())}
+			}
  		}
  	})
 }
 
-//excludes replies
-const low_priority = (ACCOUNT) => {
- 	get_tweets(ACCOUNT, true)
-}
-
-//includes replies
-const high_priority = (ACCOUNT) => {
- 	get_tweets(ACCOUNT, false)
-}
-
 //iterates through all of the users to obtain their tweets
-users.normal.forEach(low_priority)
-users.special.forEach(high_priority)
+users.users.forEach(get_tweets, false)
 
 app.use(cors({
 	origin: '*'
 }))
 
-//adds static files to server
-app.use(express.static('./public'))
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+app.use(express.json());
 
 //runs html code on server
 app.get('/', (req, res) => {
 	res.send(JSON.stringify({tweets}))
+})
+
+app.post('/addUser', (req, res) => {
+	get_tweets(req.body.user, true)
+
+	res.end("")
+})
+
+app.post('/removeUser', (req, res) => {
+	removeUser(req.body.user)
+
+	res.end("")
 })
 
 app.listen(8000)
