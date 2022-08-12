@@ -6,7 +6,8 @@ To use:
   3) Add 1 file to a public folder under server called "credentials.json"
   4) In the "credentials.json" file add the following:
   ```json
-  {"consumer_key": "your_consumer_key", 
+  {
+  "consumer_key": "your_consumer_key", 
   "consumer_secret": "your_consumer_secret", 
   "access_token": "your_access_token", 
   "access_token_secret": "your_access_token_secret"
