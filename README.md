@@ -18,6 +18,6 @@ To use:
   7) Run the server using the "npm start" in the "server" folder.
   8) Run the client using the same command in the "client" folder, which will then take you to the website.
   9) The following should be your result:
-  ![alt text](https://i.imgur.com/3dDsee1.png)
+  ![image](https://i.imgur.com/3dDsee1.png)
   10) You can then use the search to add users to your list...
-  ![alt text](https://i.imgur.com/mcbgILu.png)
+  ![image](https://i.imgur.com/mcbgILu.png)
