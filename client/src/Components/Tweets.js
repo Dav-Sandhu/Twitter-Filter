@@ -1,18 +1,12 @@
 import {useUser} from '../Context/TweetContext'
-import axios from 'axios'
+import {useId} from 'react'
 
-const Tweets = () => {
+const Tweets = ({removeUser}) => {
   const tweets = useUser()
-  let unique_key = -3;
+  let unique_key = useId()
 
   if (tweets === undefined){
     return <></>
-  }
-
-  const removeUser = async (u) => {
-    await axios.post(`http://localhost:8000/removeUser`, {user : u.toString()}).then(() => {
-      setTimeout(() => {window.location.reload(false)}, 1250)
-  })
   }
 
   return(
@@ -28,7 +22,7 @@ const Tweets = () => {
               <div className="content">{t.text}</div><br />
               {
                 t.img_flag === "true" ? t.images.map(i => {
-                  return <img className="images" src={i} key={unique_key-- - t.tweet_id} alt=""/>
+                  return <img className="images" src={i} key={unique_key += t.tweet_id} alt=""/>
                 }) : <></>
                   
               }
