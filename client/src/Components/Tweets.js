@@ -14,7 +14,6 @@ const Tweets = ({removeUser}) => {
       user.map(t => 
         {return(
           <div className="border" key={t.tweet_id}>
-            <div className="tweet">
               <h3 className="profile">
                 <img className="profile_picture" src={t.profile_picture} alt="" />&nbsp;
                 <div className="username">{t.username}</div>
@@ -28,7 +27,6 @@ const Tweets = ({removeUser}) => {
               }
               <div className="date_posted">{t.date_posted}</div>
               <button className="remove_button" onClick={() => {removeUser(t.screen_name)}}>Remove User</button><br />
-            </div>
           </div> 
         )}    
       )
