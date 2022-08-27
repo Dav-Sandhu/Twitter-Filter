@@ -11,7 +11,6 @@ const Images = ({flag, images}) => {
         })}
         </>
     )
-    
 }
 
 export default Images
