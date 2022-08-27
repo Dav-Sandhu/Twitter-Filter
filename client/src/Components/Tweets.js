@@ -1,5 +1,7 @@
 import {useUser} from '../Context/TweetContext'
 import Images from './Images'
+import TweetProfile from './Profile'
+import PropTypes from 'prop-types'
 
 const Tweets = ({removeUser}) => {
   const tweets = useUser()
@@ -13,10 +15,7 @@ const Tweets = ({removeUser}) => {
       user.map(t => 
         {return(
           <div className="tweet" key={t.tweet_id}>
-              <h3 className="profile">
-                <img className="profile_picture" src={t.profile_picture} alt="" />&nbsp;
-                <div className="username">{t.username}</div>
-              </h3>
+              <TweetProfile pic={t.profile_picture} username={t.username} />
               <div className="content">{t.text}</div><br />
               <Images flag={t.img_flag} images={t.images} />
               <div className="date_posted">{t.date_posted}</div>
@@ -26,6 +25,10 @@ const Tweets = ({removeUser}) => {
       )
     )
   )
+}
+
+Tweets.propTypes = {
+  removeUser: PropTypes.func.isRequired
 }
 
 export default Tweets
