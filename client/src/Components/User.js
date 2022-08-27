@@ -13,7 +13,15 @@ const User = () => {
         })
     }
 
-    return [user, setUser, makeRequest]
+    const removeUser = async (u) => {
+        await axios.post(`http://localhost:8000/removeUser`, {
+            user : u.toString()
+        }).then(() => {
+          setTimeout(() => {window.location.reload(false)}, 1250)
+      })
+    }
+
+    return [user, setUser, makeRequest, removeUser]
 }
 
 export default User
