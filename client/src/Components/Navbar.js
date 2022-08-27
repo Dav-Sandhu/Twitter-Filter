@@ -1,16 +1,9 @@
 import Items from './Items'
-import {useState} from 'react'
-import axios from 'axios'
+import User from './User'
 
 const Navbar = () => {
 
-    const[user, setUser] = useState("")
-
-    const makeRequest = async () => {
-        await axios.post(`http://localhost:8000/addUser`, {user : user.toString()}).then(() => {
-            setTimeout(() => {window.location.reload(false)}, 1250)
-        })
-    }
+    const [user, setUser, makeRequest] = User()
 
     const handleSubmit = (e) => {
         e.preventDefault()
