@@ -1,9 +1,6 @@
 import Items from './Items'
-import User from './User'
 
-const Navbar = () => {
-
-    const [user, setUser, makeRequest] = User()
+const Navbar = ({user, setUser, makeRequest}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
