@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const Images = ({flag, images}) => {
 
     if (flag !== "true"){
@@ -11,6 +13,11 @@ const Images = ({flag, images}) => {
         })}
         </>
     )
+}
+
+Images.propTypes = {
+    flag: PropTypes.string.isRequired,
+    images: PropTypes.array
 }
 
 export default Images
